@@ -35,8 +35,6 @@ class Danmu
         //获取弹幕请求
         $this->joinRoom();
 
-        $time = time();
-
         while($content = socket_read($this->sock, 1024)){
             preg_match('/nn@=(.*?)\//', $content, $name);
             preg_match('/txt@=(.*?)\/cid/', $content, $text);
@@ -44,13 +42,6 @@ class Danmu
             $name = $name[1]??'';
             $text = $text[1]??'';
             echo date("Y-m-d H:i:s"). ' ['. $name .']: '. $text . "\n";
-
-            //发送心跳包
-            if (time() - $time > 20) {
-                $this->keepLive();
-                $time = time();
-            }
-
         }
 
         socket_close($this->sock);
@@ -63,7 +54,7 @@ class Danmu
         socket_write($this->sock, $packMsg, strlen($packMsg));
     }
 
-    private function keepLive()
+    public function keepLive()
     {
         $keepMsg = 'type@=keeplive/tick@='. time(). '/\0';
         $packKeepMsg = $this->packMsg($keepMsg);
@@ -94,7 +85,23 @@ class Danmu
 
 }
 
+
+$pid = pcntl_fork();
 $roomId = 288016;
-$danmu = new Danmu($roomId);
-$danmu->handle();
+//主进程
+if ($pid) {
+    $danmu = new Danmu($roomId);
+    $danmu->handle();
+} else {
+    $danmu = new Danmu($roomId);
+    //子进程
+    $time = time();
+    //发送心跳包
+    while (true) {
+        if (time() - $time > 20) {
+            $danmu->keepLive();
+            $time = time();
+        }
+    }
+}
 

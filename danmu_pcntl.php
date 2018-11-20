@@ -1,14 +1,16 @@
 <?php
+include 'init.php';
 include 'Sock.php';
 
-ini_set('date.timezone', 'PRC');
+define('DEBUG', true);
 
 
 $sock = Sock::instance();
-
-pcntl_signal(SIGINT, function ($signal) use ($sock) {
+$pid = pcntl_fork();
+pcntl_signal(SIGINT, function ($signal) use ($sock, $pid) {
     if ($signal == SIGINT) {
         $sock->sendMsg($sock->msg[Sock::LOGOUT]);
+        posix_kill($pid, SIGINT);
         echo "good bye \n";
         exit();
     }
@@ -16,7 +18,7 @@ pcntl_signal(SIGINT, function ($signal) use ($sock) {
 });
 
 
-$pid = pcntl_fork();
+
 //主进程
 if ($pid) {
     $roomId = 288016;
@@ -43,9 +45,11 @@ else
         if (time() - $time > 20) {
             $sock->sendMsg($sock->msg[Sock::KEEP_LIVE]);
             $time = time();
-            echo date("Y-m-d H:i:s"). " 发送心跳包 \n";
+            if (DEBUG === true) {
+                echo date("Y-m-d H:i:s"). " 发送心跳包 \n";
+            }
+
         }
-        pcntl_signal_dispatch();
     }
 }
 

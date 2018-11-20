@@ -10,7 +10,7 @@ $pid = pcntl_fork();
 pcntl_signal(SIGINT, function ($signal) use ($sock, $pid) {
     if ($signal == SIGINT) {
         $sock->sendMsg($sock->msg[Sock::LOGOUT]);
-        posix_kill($pid, SIGINT);
+        posix_kill($pid, SIGKILL);
         echo "good bye \n";
         exit();
     }

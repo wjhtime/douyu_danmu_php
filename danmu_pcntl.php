@@ -28,17 +28,18 @@ if ($pid) {
     $sock->sendMsg(sprintf($sock->msg[Sock::JOIN_ROOM], $roomId));
 
     while ($content = $sock->read()) {
+
         if (DEBUG == true) {
+            echo strpos($content, chr(0x00)). "\n";
             echo $content. "\n";
-            $r = mb_detect_encoding('年后', array("ASCII",'UTF-8',"GB2312","GBK",'BIG5'));
-            echo($r. "\n");
         }
-        preg_match_all('/\/nn@=(.*?)\//', $content, $name);
-        preg_match_all('/\/txt@=(.*?)\/cid/', $content, $text);
-        if (empty($name)) continue;
-        $name = $name[1]??'';
-        $text = $text[1]??'';
-        echo date("Y-m-d H:i:s"). ' ['. $name .']: '. $text . "\n";
+        preg_match_all('/\/nn@=(.*?)\/txt@=(.*?)\//', $content, $result, PREG_SET_ORDER);
+
+        foreach ($result as $item) {
+            $name = $item[1] ?? '';
+            $text = $item[2] ?? '';
+            echo date("Y-m-d H:i:s"). ' ['. $name .']: '. $text . "\n";
+        }
 
         pcntl_signal_dispatch();
     }

@@ -5,6 +5,8 @@ include 'Sock.php';
 define('DEBUG', true);
 
 
+
+
 $sock = Sock::instance();
 $pid = pcntl_fork();
 pcntl_signal(SIGINT, function ($signal) use ($sock, $pid) {
@@ -26,8 +28,13 @@ if ($pid) {
     $sock->sendMsg(sprintf($sock->msg[Sock::JOIN_ROOM], $roomId));
 
     while ($content = $sock->read()) {
-        preg_match('/nn@=(.*?)\//', $content, $name);
-        preg_match('/txt@=(.*?)\/cid/', $content, $text);
+        if (DEBUG == true) {
+            echo $content. "\n";
+            $r = mb_detect_encoding('年后', array("ASCII",'UTF-8',"GB2312","GBK",'BIG5'));
+            echo($r. "\n");
+        }
+        preg_match_all('/\/nn@=(.*?)\//', $content, $name);
+        preg_match_all('/\/txt@=(.*?)\/cid/', $content, $text);
         if (empty($name)) continue;
         $name = $name[1]??'';
         $text = $text[1]??'';

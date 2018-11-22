@@ -1,7 +1,9 @@
 <?php
+namespace App;
+
+
 class Message
 {
-
 
     public static function handle($msg) {
         preg_match('/type@=(.*?)\//', $msg, $match);

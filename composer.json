@@ -1,0 +1,23 @@
+{
+    "name": "wenjianhua/douyu_danmu_php",
+    "authors": [
+        {
+            "name": "wjh",
+            "email": "wjhokey@gmail.com"
+        }
+    ],
+    "require": {
+
+    },
+    "autoload": {
+        "psr-4":{
+            "App\\": "src"
+        }
+    },
+    "repository":{
+        "packagist":{
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    }
+}

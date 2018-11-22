@@ -1,6 +1,7 @@
 <?php
 include 'init.php';
 include 'Sock.php';
+include 'Message.php';
 
 define('DEBUG', true);
 
@@ -28,18 +29,8 @@ if ($pid) {
     $sock->sendMsg(sprintf($sock->msg[Sock::JOIN_ROOM], $roomId));
 
     while ($content = $sock->read()) {
-
-        if (DEBUG == true) {
-            echo strpos($content, chr(0x00)). "\n";
-            echo $content. "\n";
-        }
-        preg_match_all('/\/nn@=(.*?)\/txt@=(.*?)\//', $content, $result, PREG_SET_ORDER);
-
-        foreach ($result as $item) {
-            $name = $item[1] ?? '';
-            $text = $item[2] ?? '';
-            echo date("Y-m-d H:i:s"). ' ['. $name .']: '. $text . "\n";
-        }
+        //解析，输出内容
+        Message::handle($content);
 
         pcntl_signal_dispatch();
     }
@@ -50,7 +41,7 @@ else
     $time = time();
     //发送心跳包
     while (true) {
-        if (time() - $time > 20) {
+        if (time() - $time > 40) {
             $sock->sendMsg($sock->msg[Sock::KEEP_LIVE]);
             $time = time();
             if (DEBUG === true) {

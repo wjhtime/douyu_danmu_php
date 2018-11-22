@@ -1,6 +1,8 @@
 <?php
 namespace App;
 
+use Swoole\Client;
+
 class Swoole
 {
 
@@ -11,8 +13,11 @@ class Swoole
         $port = 8601;
         $roomId = 288016;
 
-        $client = new \swoole_client(SWOOLE_SOCK_TCP,SWOOLE_SOCK_ASYNC);
+        $client = new \Swoole\Client(SWOOLE_SOCK_TCP,SWOOLE_SOCK_ASYNC);
         $client->on('connect', function ($cli) use ($roomId) {
+            /**
+             * @var Client $cli
+             */
             $cli->send(Sock::packMsg(sprintf("type@=loginreq/roomid@=%s/\0", $roomId)));
             $cli->send(Sock::packMsg(sprintf("type@=joingroup/rid@=%d/gid@=-9999/\0", $roomId)));
         });

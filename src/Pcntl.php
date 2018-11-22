@@ -20,8 +20,6 @@ class Pcntl
 
         });
 
-
-
         //主进程
         if ($pid) {
             $roomId = 288016;
@@ -54,11 +52,5 @@ class Pcntl
     }
 
 }
-
-
-
-
-
-
 
 

@@ -46,7 +46,7 @@ class Sock
      * @param $str
      * @return string
      */
-    private function packMsg($str){
+    public static function packMsg($str){
         $length = pack('V', 4 + 4 + strlen($str) + 1);
         $code = $length;
         $magic = chr(0xb1).chr(0x02).chr(0x00).chr(0x00);
@@ -60,7 +60,7 @@ class Sock
      */
     public function sendMsg($msg)
     {
-        $packMsg = $this->packMsg($msg);
+        $packMsg = self::packMsg($msg);
         socket_write($this->sock, $packMsg, strlen($packMsg));
     }
 

@@ -1,18 +1,25 @@
 <?php
 namespace App;
 
-
+/**
+ * 多进程实现
+ * Class Pcntl
+ * @package App
+ */
 class Pcntl
 {
 
 
     public static function handle()
     {
-        $sock = Sock::instance();
+        $ip = Douyu::ip();
+        $port = Douyu::port();
+
+        $sock = Sock::instance($ip, $port);
         $pid = pcntl_fork();
         pcntl_signal(SIGINT, function ($signal) use ($sock, $pid) {
             if ($signal == SIGINT) {
-                $sock->sendMsg($sock->msg[Sock::LOGOUT]);
+                $sock->sendMsg(Douyu::$msg[Douyu::LOGOUT]);
                 posix_kill($pid, SIGKILL);
                 echo "good bye \n";
                 exit();
@@ -23,8 +30,8 @@ class Pcntl
         //主进程
         if ($pid) {
             $roomId = 288016;
-            $sock->sendMsg(sprintf($sock->msg[Sock::LOGIN], $roomId));
-            $sock->sendMsg(sprintf($sock->msg[Sock::JOIN_ROOM], $roomId));
+            $sock->sendMsg(Douyu::packMsg(sprintf(Douyu::$msg[Douyu::LOGIN], $roomId)));
+            $sock->sendMsg(Douyu::packMsg(sprintf(Douyu::$msg[Douyu::JOIN_ROOM], $roomId)));
 
             while ($content = $sock->read()) {
                 //解析，输出内容
@@ -40,7 +47,7 @@ class Pcntl
             //发送心跳包
             while (true) {
                 if (time() - $time > 40) {
-                    $sock->sendMsg($sock->msg[Sock::KEEP_LIVE]);
+                    $sock->sendMsg(Douyu::$msg[Douyu::KEEP_LIVE]);
                     $time = time();
                     if (DEBUG === true) {
                         echo date("Y-m-d H:i:s"). " 发送心跳包 \n";

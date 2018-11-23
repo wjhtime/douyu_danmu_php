@@ -5,6 +5,13 @@ namespace App;
 class Message
 {
 
+    const SPBC = 'spbc';
+    const CHATMSG = 'chatmsg';
+    const UENTER = 'uenter';
+    const SRRES = 'srres';
+    const UPGRADE = 'upgrade';
+    const SSD = 'ssd';
+
     public static function handle($msg) {
         preg_match('/type@=(.*?)\//', $msg, $match);
         $type = $match[1];
@@ -12,7 +19,7 @@ class Message
 
         switch($type) {
             //礼物广播
-            case 'spbc':
+            case self::SPBC:
                 preg_match('/\/sn@=(.*?)\/dn@=(.*?)\/gn@=(.*?)\/gc@=(.*?)\//', $msg, $result);
                 $from = $result[1] ?? '';
                 $to = $result[2] ?? '';
@@ -21,7 +28,7 @@ class Message
                 echo date("Y-m-d H:i:s"). ' [' . $from. '] 送给了 ['. $to. '] ' . $giftNum.  '个'. $gift . "\n";
                 break;
             //弹幕消息
-            case 'chatmsg':
+            case self::CHATMSG:
                 preg_match_all('/\/nn@=(.*?)\/txt@=(.*?)\//', $msg, $result, PREG_SET_ORDER);
                 foreach ($result as $item) {
                     $name = $item[1] ?? '';
@@ -30,26 +37,26 @@ class Message
                 }
                 break;
             //用户进入房间
-            case 'uenter':
+            case self::UENTER:
                 preg_match('/\/nn@=(.*?)\//', $msg, $result);
                 $name = $result[1] ?? '';
                 echo date("Y-m-d H:i:s"). ' ['. $name .'] 进入房间' . "\n";
                 break;
             //分享房间
-            case 'srres':
+            case self::SRRES:
                 preg_match('/\/nickname@=(.*?)\//', $msg, $result);
                 $name = $result[1] ?? '';
                 echo date("Y-m-d H:i:s"). ' ['. $name .'] 分享了直播间' . "\n";
                 break;
             //用户等级提升
-            case 'upgrade':
+            case self::UPGRADE:
                 preg_match('/\/nn@=(.*?)\/level@=(.*?)\//', $msg, $result);
                 $name = $result[1] ?? '';
                 $level = $result[2] ?? '';
                 echo date("Y-m-d H:i:s"). ' 恭喜 ['. $name .'] 升级到'. $level . "\n";
                 break;
             //超级弹幕
-            case 'ssd':
+            case self::SSD:
                 preg_match('/\/content@=(.*?)\//', $msg, $result);
                 $content = $result[1] ?? '';
                 echo date("Y-m-d H:i:s"). ' 超级弹幕 '. $content . "\n";

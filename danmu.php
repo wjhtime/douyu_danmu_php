@@ -1,6 +1,7 @@
 <?php
 
 use App\Pcntl;
+use App\Swoole;
 
 
 define('DEBUG', true);
@@ -14,4 +15,4 @@ require APP_ROOT . '/vendor/autoload.php';
 
 require APP_ROOT . '/src/init.php';
 
-Pcntl::handle();
+Swoole::handle();

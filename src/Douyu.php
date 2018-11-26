@@ -40,12 +40,13 @@ class Douyu
      * @param $str
      * @return string
      */
-    public static function packMsg($str){
-        $length = pack('V', 4 + 4 + strlen($str) + 1);
+    public static function packMsg($str, ...$params){
+        $msg = vsprintf(self::$msg[$str], $params);
+        $length = pack('V', 4 + 4 + strlen($msg) + 1);
         $code = $length;
         $magic = chr(0xb1).chr(0x02).chr(0x00).chr(0x00);
         $end = chr(0x00);
-        return $length.$code.$magic.$str.$end;
+        return $length.$code.$magic.$msg.$end;
     }
 
 }

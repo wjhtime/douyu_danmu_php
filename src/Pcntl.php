@@ -30,8 +30,8 @@ class Pcntl
         //主进程
         if ($pid) {
             $roomId = 288016;
-            $sock->sendMsg(Douyu::packMsg(sprintf(Douyu::$msg[Douyu::LOGIN], $roomId)));
-            $sock->sendMsg(Douyu::packMsg(sprintf(Douyu::$msg[Douyu::JOIN_ROOM], $roomId)));
+            $sock->sendMsg(Douyu::packMsg(Douyu::LOGIN, $roomId));
+            $sock->sendMsg(Douyu::packMsg(Douyu::JOIN_ROOM, $roomId));
 
             while ($content = $sock->read()) {
                 //解析，输出内容

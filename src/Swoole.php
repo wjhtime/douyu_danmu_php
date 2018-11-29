@@ -25,9 +25,6 @@ class Swoole
         $client->on('receive', function ($cli, $data) {
             Message::handle($data);
 
-//            swoole_timer_tick(45000, function () use ($cli) {
-//                $cli->send(Douyu::packMsg(Douyu::KEEP_LIVE));
-//            });
         });
 
         $client->on("error", function($cli){
@@ -40,6 +37,13 @@ class Swoole
 
         $client->connect($ip, $port, 1);
 
+        swoole_timer_tick(45000, function () use ($client) {
+            /**
+             * @var Client $client
+             */
+            $client->send(Douyu::packMsg(Douyu::KEEP_LIVE));
+//            echo "发送心跳\n";
+        });
 
 
     }

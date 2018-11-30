@@ -35,6 +35,7 @@ php danmu.php
 
 ## To Do List
 - 弹幕量大时出现获取数据异常
+- 弹幕信息分类不够清晰，未知type型数据过多
 
 
 ## CHANGELOG

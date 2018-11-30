@@ -1,13 +1,26 @@
 <?php
-namespace App;
+namespace App\Command;
 
-use \Swoole\Client;
+use App\Douyu;
+use App\Message;
+use Swoole\Client;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-class Swoole
+class DouyuCommand extends Command
 {
 
-    public static function handle()
+    protected function configure()
     {
+        $this->setName('danmu');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $io = new SymfonyStyle($input, $output);
+//        $io->title('弹幕列表');
 
         $ip = Douyu::ip();
         $port = Douyu::port();
@@ -22,11 +35,12 @@ class Swoole
             $cli->send(Douyu::packMsg(Douyu::JOIN_ROOM, $roomId));
         });
 
-        $client->on('receive', function ($cli, $data) {
+        $client->on('receive', function ($cli, $data) use ($io) {
             $receiveResult = Message::handle($data);
-            array_walk($receiveResult, function ($msg) {
-                echo $msg;
+            array_walk($receiveResult, function ($msg) use ($io) {
+                $io->text($msg);
             });
+
         });
 
         $client->on("error", function($cli){
@@ -46,8 +60,8 @@ class Swoole
             $client->send(Douyu::packMsg(Douyu::KEEP_LIVE));
 //            echo "发送心跳\n";
         });
-
-
     }
+
+
 
 }

@@ -7,7 +7,7 @@
         }
     ],
     "require": {
-
+        "symfony/console": "^3.4"
     },
     "autoload": {
         "psr-4":{

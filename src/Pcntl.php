@@ -35,8 +35,10 @@ class Pcntl
 
             while ($content = $sock->read()) {
                 //解析，输出内容
-                Message::handle($content);
-
+                $receiveResult = Message::handle($content);
+                array_walk($receiveResult, function ($msg) {
+                    echo $msg;
+                });
                 pcntl_signal_dispatch();
             }
         }

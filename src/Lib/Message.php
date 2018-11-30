@@ -124,6 +124,7 @@ class Message
             case 'lgpoolsite':
             case 'blab':
             case 'fswrank':
+            case 'cthn':
                 break;
 
             default:

@@ -1,8 +1,8 @@
 <?php
 namespace App\Command;
 
-use App\Douyu;
-use App\Message;
+use App\Lib\Douyu;
+use App\Lib\Message;
 use Swoole\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,10 +35,15 @@ class DouyuCommand extends Command
             $cli->send(Douyu::packMsg(Douyu::JOIN_ROOM, $roomId));
         });
 
-        $client->on('receive', function ($cli, $data) use ($io) {
+
+        $client->on('receive', function ($cli, $data) use ($io, $output) {
             $receiveResult = Message::handle($data);
-            array_walk($receiveResult, function ($msg) use ($io) {
-                $io->text($msg);
+            array_walk($receiveResult['msg'], function ($msg) use ($io, $output) {
+                if (SHOW_TIME) {
+                    $date = date("Y-m-d H:i:s");
+                    $msg = $date. ' ' . $msg;
+                }
+                $output->writeln($msg);
             });
 
         });

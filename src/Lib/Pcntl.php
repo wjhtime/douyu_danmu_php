@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Lib;
 
 /**
  * 多进程实现
@@ -37,6 +37,10 @@ class Pcntl
                 //解析，输出内容
                 $receiveResult = Message::handle($content);
                 array_walk($receiveResult, function ($msg) {
+                    if (SHOW_TIME) {
+                        $date = date("Y-m-d H:i:s");
+                        $msg = $date. ' ' . $msg;
+                    }
                     echo $msg;
                 });
                 pcntl_signal_dispatch();

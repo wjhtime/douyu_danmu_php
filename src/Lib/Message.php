@@ -67,7 +67,7 @@ class Message
                 break;
             //弹幕消息
             case self::CHATMSG:
-                preg_match_all('/\/nn@=(.*?)\/txt@=(.*?)\//', $msg, $matches, PREG_SET_ORDER);
+                preg_match_all('/\/nn@=([^\/]*?)\/txt@=([^\/]*?)\//', $msg, $matches, PREG_SET_ORDER);
                 $result['type'] = self::TYPE_CHAT_MSG;
                 foreach ($matches as $item) {
                     $name            = $item[1] ?? '';
@@ -145,6 +145,7 @@ class Message
             case 'rquizisn':
             case 'tsgs':
             case 'rquiziln':
+            case 'tkrquizisn':
                 break;
 
             default:

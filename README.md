@@ -31,6 +31,9 @@ php danmu.php
 ## Screenshots
 ![截图](./images/screen_shot.jpeg)
 
+## To Do List
+- 弹幕量大时出现获取数据异常
+
 
 ## CHANGELOG
 

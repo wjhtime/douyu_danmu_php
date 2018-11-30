@@ -11,12 +11,13 @@ class Message
 {
 
     //斗鱼原类型
-    const SPBC    = 'spbc';
-    const CHATMSG = 'chatmsg';
-    const UENTER  = 'uenter';
-    const SRRES   = 'srres';
-    const UPGRADE = 'upgrade';
-    const SSD     = 'ssd';
+    const SPBC        = 'spbc';
+    const CHATMSG     = 'chatmsg';
+    const UENTER      = 'uenter';
+    const SRRES       = 'srres';
+    const UPGRADE     = 'upgrade';
+    const SSD         = 'ssd';
+    const NEWBLACKRES = 'newblackres';
 
     //自定义类型
     const TYPE_GIFT           = 'gift';
@@ -25,6 +26,7 @@ class Message
     const TYPE_SHARE_ROOM     = 'share_room';
     const TYPE_USER_LEVEL_UP  = 'user_level_up';
     const TYPE_SUPER_CHAT_MSG = 'super_chat_msg';
+    const TYPE_BANNED         = 'banned';
     const TYPE_ERROR          = 'error';
 
     //格式化消息
@@ -102,6 +104,14 @@ class Message
                 $result['type']  = self::TYPE_SUPER_CHAT_MSG;
                 $result['msg'][] = '超级弹幕 ' . $content;
                 break;
+            //禁言
+            case self::NEWBLACKRES:
+                preg_match('/\/snic@=(.*?)\/dnic@=(.*?)\//', $msg, $matches);
+                $user1           = $matches[1] ?? '';
+                $user2           = $matches[2] ?? '';
+                $result['type']  = self::TYPE_BANNED;
+                $result['msg'][] = '[' . $user1 . '] 将 [' . $user2 . '] 禁言';
+                break;
             //贵族广播消息
             case 'online_noble_list':
                 //心跳
@@ -110,6 +120,12 @@ class Message
             case 'loginres':
                 //赠送礼物，没有返回名称，不显示
             case 'dgb':
+                //广播排行榜消息
+            case 'ranklist':
+                //房间内 top10 变化消息
+            case 'rankup':
+                //栏目排行榜变更通知
+            case 'rri':
 
                 //未知
             case 'pingreq':
@@ -126,6 +142,9 @@ class Message
             case 'fswrank':
             case 'cthn':
             case 'wirt':
+            case 'rquizisn':
+            case 'tsgs':
+            case 'rquiziln':
                 break;
 
             default:
@@ -147,7 +166,11 @@ class Message
     public static function styleMessage($msgResult)
     {
         switch ($msgResult['type']) {
+
             case self::TYPE_GIFT:
+            case self::TYPE_USER_LEVEL_UP:
+            case self::TYPE_SUPER_CHAT_MSG:
+            case self::TYPE_BANNED:
                 array_walk($msgResult['msg'], function (&$msg) {
                     $msg = sprintf(self::TAG_RED, $msg);
                 });
@@ -165,16 +188,6 @@ class Message
             case self::TYPE_SHARE_ROOM:
                 array_walk($msgResult['msg'], function (&$msg) {
                     $msg = sprintf(self::TAG_BLUE, $msg);
-                });
-                break;
-            case self::TYPE_USER_LEVEL_UP:
-                array_walk($msgResult['msg'], function (&$msg) {
-                    $msg = sprintf(self::TAG_RED, $msg);
-                });
-                break;
-            case self::TYPE_SUPER_CHAT_MSG:
-                array_walk($msgResult['msg'], function (&$msg) {
-                    $msg = sprintf(self::TAG_RED, $msg);
                 });
                 break;
             case self::TYPE_ERROR:

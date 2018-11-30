@@ -125,6 +125,7 @@ class Message
             case 'blab':
             case 'fswrank':
             case 'cthn':
+            case 'wirt':
                 break;
 
             default:

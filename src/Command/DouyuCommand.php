@@ -74,6 +74,7 @@ class DouyuCommand extends Command
         // 接收数据
         $client->on('receive', function ($cli, $data) use ($output) {
             $receiveResult = Message::handle($data);
+            $receiveResult['msg'] = $receiveResult['msg'] ?? [];
             array_walk($receiveResult['msg'], function ($msg) use ($output) {
                 if (SHOW_TIME) {
                     $date = date("Y-m-d H:i:s");

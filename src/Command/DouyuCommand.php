@@ -13,10 +13,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DouyuCommand extends Command
 {
-    const TAG_INFO = "<fg=green>%s</>";
+    const TAG_INFO  = "<fg=green>%s</>";
+    const TAG_ERROR = "<fg=red>%s</>";
 
-    const MSG_ENTER   = '加入房间中...';
-    const MSG_LOADING = '接收弹幕列表...';
+    const MSG_ENTER                = '加入房间中...';
+    const MSG_LOADING              = '接收弹幕列表...';
+    const MSG_ERROR_ROOM_NOT_EXIST = '房间不存在';
+    const MSG_ERROR_ROOM_NOT_OPEN  = '主播未开播';
+
+    const ROOM_INFO_URL = "http://open.douyucdn.cn/api/RoomApi/room/%s";
+
+    protected $roomInfo = [];
 
     /**
      * 配置命令相关信息
@@ -38,11 +45,21 @@ class DouyuCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(sprintf(self::TAG_INFO, self::MSG_ENTER));
         $ip     = Douyu::ip();
         $port   = Douyu::port();
         $roomId = $input->getArgument('room_id');
 
+        $io = new SymfonyStyle($input, $output);
+
+        if (!$this->checkRoomExist($roomId)) {
+            return $io->error(self::MSG_ERROR_ROOM_NOT_EXIST);
+        }
+
+        if ($this->roomInfo['data']['room_status'] == 2) {
+            return $io->error(self::MSG_ERROR_ROOM_NOT_OPEN);
+        }
+
+        $output->writeln(sprintf(self::TAG_INFO, self::MSG_ENTER));
         $client = new Client(SWOOLE_SOCK_TCP, SWOOLE_SOCK_ASYNC);
         // 连接
         $client->on('connect', function ($cli) use ($roomId, $output) {
@@ -84,6 +101,26 @@ class DouyuCommand extends Command
             $client->send(Douyu::packMsg(Douyu::KEEP_LIVE));
 //            echo "发送心跳\n";
         });
+    }
+
+    /**
+     * 验证房间号是否存在
+     *
+     * @param $roomId
+     *
+     * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function checkRoomExist($roomId)
+    {
+        $client = new \GuzzleHttp\Client();
+        $res    = $client->request('GET', sprintf(self::ROOM_INFO_URL, $roomId));
+        $body   = json_decode($res->getBody(), TRUE);
+        if ($body['error'] == 0) {
+            $this->roomInfo = $body;
+            return TRUE;
+        }
+        return FALSE;
     }
 
 

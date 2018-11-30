@@ -1,7 +1,9 @@
 # 斗鱼弹幕 PHP版本
 
 之前写过python获取斗鱼的弹幕 [传送门](https://github.com/wjhtime/douyu_danmu_python)，突发奇想，想要用php来实现。弹幕获取实现起来很简单，用swoole很容易做到了，后期也做了一些命令行格式的优化
+
 使用了swoole来连接socket，取代了php的socket的函数，使用起来更加方便灵活，swoole文档 [传送门](https://wiki.swoole.com/wiki/page/1.html)
+
 默认获取的英雄联盟的弹幕，如果想要看其他房间的弹幕，只需执行命令 php cli.php danmu <room id>即可
 
 ## Requirements

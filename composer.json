@@ -8,7 +8,8 @@
     ],
     "require": {
         "symfony/console": "^3.4",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "jaeger/querylist": "^4.0"
     },
     "autoload": {
         "psr-4":{

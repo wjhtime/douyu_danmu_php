@@ -9,6 +9,7 @@ require APP_ROOT . '/src/init.php';
 
 $application = new \Symfony\Component\Console\Application();
 $application->add(new \App\Command\DouyuCommand());
+$application->add(new \App\Command\DouyuSearchCommand());
 
 $application->run();
 

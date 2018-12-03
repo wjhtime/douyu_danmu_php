@@ -30,15 +30,15 @@ class Message
     const TYPE_ERROR          = 'error';
 
     //格式化消息
-    const TAG_YELLOW = "<fg=yellow>%s</>";
+    const TAG_YELLOW = "<fg=yellow>:message</>";
     //青色
-    const TAG_CYAN  = "<fg=cyan>%s</>";
-    const TAG_BLUE  = "<fg=blue>%s</>";
-    const TAG_GREEN = "<fg=green>%s</>";
-    const TAG_RED   = "<fg=red>%s</>";
+    const TAG_CYAN  = "<fg=cyan>:message</>";
+    const TAG_BLUE  = "<fg=blue>:message</>";
+    const TAG_GREEN = "<fg=green>:message</>";
+    const TAG_RED   = "<fg=red>:message</>";
     //品红
-    const TAG_MAGENTA = "<fg=magenta>%s</>";
-    const TAG_ERROR   = "<fg=cyan;options=blink>%s</>";
+    const TAG_MAGENTA = "<fg=magenta>:message</>";
+    const TAG_ERROR   = "<fg=cyan;options=blink>:message</>";
 
     /**
      * 弹幕消息处理
@@ -173,27 +173,27 @@ class Message
             case self::TYPE_SUPER_CHAT_MSG:
             case self::TYPE_BANNED:
                 array_walk($msgResult['msg'], function (&$msg) {
-                    $msg = sprintf(self::TAG_RED, $msg);
+                    $msg = str_replace(':message', $msg, self::TAG_RED);
                 });
                 break;
             case self::TYPE_CHAT_MSG:
                 array_walk($msgResult['msg'], function (&$msg) {
-                    $msg = sprintf(self::TAG_MAGENTA, $msg);
+                    $msg = str_replace(':message', $msg, self::TAG_MAGENTA);
                 });
                 break;
             case self::TYPE_USER_ENTER:
                 array_walk($msgResult['msg'], function (&$msg) {
-                    $msg = sprintf(self::TAG_YELLOW, $msg);
+                    $msg = str_replace(':message', $msg, self::TAG_YELLOW);
                 });
                 break;
             case self::TYPE_SHARE_ROOM:
                 array_walk($msgResult['msg'], function (&$msg) {
-                    $msg = sprintf(self::TAG_BLUE, $msg);
+                    $msg = str_replace(':message', $msg, self::TAG_BLUE);
                 });
                 break;
             case self::TYPE_ERROR:
                 array_walk($msgResult['msg'], function (&$msg) {
-                    $msg = sprintf(self::TAG_ERROR, $msg);
+                    $msg = str_replace(':message', $msg, self::TAG_ERROR);
                 });
                 break;
         }

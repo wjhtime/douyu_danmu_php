@@ -13,8 +13,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DouyuCommand extends Command
 {
-    const TAG_INFO  = "<fg=green>%s</>";
-    const TAG_ERROR = "<fg=red>%s</>";
+    const TAG_INFO  = "<fg=green>:message</>";
+    const TAG_ERROR = "<fg=red>:message</>";
 
     const MSG_ENTER                = '加入房间中...';
     const MSG_LOADING              = '接收弹幕列表...';
@@ -59,7 +59,7 @@ class DouyuCommand extends Command
             return $io->error(self::MSG_ERROR_ROOM_NOT_OPEN);
         }
 
-        $output->writeln(sprintf(self::TAG_INFO, self::MSG_ENTER));
+        $output->writeln(str_replace(':message', self::MSG_ENTER, self::TAG_INFO));
         $client = new Client(SWOOLE_SOCK_TCP, SWOOLE_SOCK_ASYNC);
         // 连接
         $client->on('connect', function ($cli) use ($roomId, $output) {
@@ -68,12 +68,12 @@ class DouyuCommand extends Command
              */
             $cli->send(Douyu::packMsg(Douyu::LOGIN, $roomId));
             $cli->send(Douyu::packMsg(Douyu::JOIN_ROOM, $roomId));
-            $output->writeln(sprintf(self::TAG_INFO, self::MSG_LOADING));
+            $output->writeln(str_replace(':message', self::MSG_LOADING, self::TAG_INFO));
         });
 
         // 接收数据
         $client->on('receive', function ($cli, $data) use ($output) {
-            $receiveResult = Message::handle($data);
+            $receiveResult        = Message::handle($data);
             $receiveResult['msg'] = $receiveResult['msg'] ?? [];
             array_walk($receiveResult['msg'], function ($msg) use ($output) {
                 if (SHOW_TIME) {

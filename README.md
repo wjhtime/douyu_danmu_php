@@ -16,12 +16,12 @@
 
 ## Quick Start
 ```
-pecl install swoole
+1. pecl install swoole 
 省略配置过程，具体参照swoole文档...
-
-php cli.php danmu <room_id=288016>
-或者
-php danmu.php
+2. git clone git@github.com:wjhtime/douyu_danmu_php.git
+3. composer install -vvv (安装过程可能较长，通过-vvv查看输出)
+4. php cli.php danmu <room_id=288016> 
+或者 php danmu.php
 ```
 
 ## Feature

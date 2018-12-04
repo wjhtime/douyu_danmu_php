@@ -55,7 +55,7 @@ class DouyuSearchCommand extends Command
     {
         $ql = QueryList::get("http://douyu.tv/search?kw=". rawurlencode($keywords));
         $ids = $ql->find('.play-list a')->attrs('data-rid')->toArray();
-        $titles = $ql->find('.play-list a')->attrs('title')->toArray();
+        $titles = $ql->find('.play-list li a .mes .mes-tit h3')->texts('title')->toArray();
 
         return array_map(null, $ids, $titles);
     }

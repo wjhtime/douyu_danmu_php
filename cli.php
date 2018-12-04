@@ -8,8 +8,10 @@ require APP_ROOT . '/vendor/autoload.php';
 require APP_ROOT . '/src/init.php';
 
 $application = new \Symfony\Component\Console\Application();
-$application->add(new \App\Command\DouyuCommand());
-$application->add(new \App\Command\DouyuSearchCommand());
+
+array_map(function ($cmd) use ($application) {
+    $application->add(new $cmd);
+}, $config->get('commands'));
 
 $application->run();
 

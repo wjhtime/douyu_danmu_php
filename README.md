@@ -20,7 +20,8 @@
 省略配置过程，具体参照swoole文档...
 2. git clone git@github.com:wjhtime/douyu_danmu_php.git
 3. composer install -vvv (安装过程可能较长，通过-vvv查看输出)
-4. php cli.php danmu <room_id=288016> 
+4. php cli.php douyu:search <keywords>
+5. php cli.php danmu <room_id=288016>
 或者 php danmu.php
 ```
 
@@ -33,8 +34,10 @@
 ## Screenshots
 ![截图](./images/screen_shot.jpeg)
 
+## Illustrate
+![演示](./images/show.gif)
+
 ## To Do List
-- 弹幕量大时出现获取数据异常
 - 弹幕信息分类不够清晰，未知type型数据过多
 
 

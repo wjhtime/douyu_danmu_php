@@ -6,8 +6,9 @@ class Douyu
 {
 
     // 斗鱼配置信息
-    const SITE_NAME = "openbarrage.douyutv.com";
-    const PORT      = 8601;
+    const SITE_NAME       = "openbarrage.douyutv.com";
+    const PORT            = 8601;
+    const DEFAULT_ROOM_ID = 288016;
 
     // 消息
     const SEND_MSG_LOGIN     = "type@=loginreq/roomid@=:msg/\0";
@@ -26,6 +27,7 @@ class Douyu
 
     // 房间信息接口
     const ROOM_INFO_URL = "http://open.douyucdn.cn/api/RoomApi/room/%s";
+    const ROOM_SEARCH_URL = "http://douyu.tv/search?kw=%s";
 
     public static function ip()
     {

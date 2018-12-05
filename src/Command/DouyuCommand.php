@@ -22,7 +22,7 @@ class DouyuCommand extends Command
     {
         $this->setName('danmu')
              ->setDescription('斗鱼获取弹幕，输入房间id即可获取弹幕，默认显示英雄联盟相关的弹幕')
-             ->addArgument('room_id', InputArgument::OPTIONAL, '房间号', 288016);
+             ->addArgument('room_id', InputArgument::OPTIONAL, '房间号', Douyu::DEFAULT_ROOM_ID);
     }
 
     /**
@@ -51,6 +51,7 @@ class DouyuCommand extends Command
         $output->writeln(Douyu::showMsg(Douyu::MSG_ENTER));
 
         $client = new Client(SWOOLE_SOCK_TCP, SWOOLE_SOCK_ASYNC);
+
         // 连接
         $client->on('connect', function ($cli) use ($roomId, $output) {
             $cli->send(Douyu::packMsg(Douyu::SEND_MSG_LOGIN, $roomId));
@@ -69,7 +70,6 @@ class DouyuCommand extends Command
                 }
                 $output->writeln($msg);
             });
-
         });
 
         $client->on("error", function ($cli) {

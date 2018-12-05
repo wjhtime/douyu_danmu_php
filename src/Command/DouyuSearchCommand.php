@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Lib\Douyu;
 use QL\QueryList;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -12,9 +13,6 @@ use Tightenco\Collect\Support\Collection;
 
 class DouyuSearchCommand extends Command
 {
-    const SEARCH_URL = "https://www.douyu.com/search/?kw=%s";
-
-
     /**
      * 配置命令相关信息
      */
@@ -53,7 +51,7 @@ class DouyuSearchCommand extends Command
      */
     protected function searchRooms($keywords)
     {
-        $ql = QueryList::get("http://douyu.tv/search?kw=". rawurlencode($keywords));
+        $ql = QueryList::get(sprintf(Douyu::ROOM_SEARCH_URL, rawurlencode($keywords)));
         $ids = $ql->find('.play-list a')->attrs('data-rid')->toArray();
         $titles = $ql->find('.play-list li a .mes .mes-tit h3')->texts('title')->toArray();
 

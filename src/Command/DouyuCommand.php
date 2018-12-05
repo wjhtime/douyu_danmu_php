@@ -13,16 +13,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DouyuCommand extends Command
 {
-    const TAG_INFO  = "<fg=green>:message</>";
-    const TAG_ERROR = "<fg=red>:message</>";
-
-    const MSG_ENTER                = '加入房间中...';
-    const MSG_LOADING              = '接收弹幕列表...';
-    const MSG_ERROR_ROOM_NOT_EXIST = '房间不存在';
-    const MSG_ERROR_ROOM_NOT_OPEN  = '主播未开播';
-
-    const ROOM_INFO_URL = "http://open.douyucdn.cn/api/RoomApi/room/%s";
-
     protected $roomInfo = [];
 
     /**
@@ -46,29 +36,26 @@ class DouyuCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ip     = Douyu::ip();
-        $port   = Douyu::port();
+        $port   = Douyu::PORT;
         $roomId = $input->getArgument('room_id');
 
         $io = new SymfonyStyle($input, $output);
 
         if (!$this->checkRoomExist($roomId)) {
-            return $io->error(self::MSG_ERROR_ROOM_NOT_EXIST);
+            return $io->error(Douyu::MSG_ERROR_ROOM_NOT_EXIST);
         }
 
         if ($this->roomInfo['data']['room_status'] == 2) {
-            return $io->error(self::MSG_ERROR_ROOM_NOT_OPEN);
+            return $io->error(Douyu::MSG_ERROR_ROOM_NOT_OPEN);
         }
+        $output->writeln(Douyu::showMsg(Douyu::MSG_ENTER));
 
-        $output->writeln(str_replace(':message', self::MSG_ENTER, self::TAG_INFO));
         $client = new Client(SWOOLE_SOCK_TCP, SWOOLE_SOCK_ASYNC);
         // 连接
         $client->on('connect', function ($cli) use ($roomId, $output) {
-            /**
-             * @var Client $cli
-             */
-            $cli->send(Douyu::packMsg(Douyu::LOGIN, $roomId));
-            $cli->send(Douyu::packMsg(Douyu::JOIN_ROOM, $roomId));
-            $output->writeln(str_replace(':message', self::MSG_LOADING, self::TAG_INFO));
+            $cli->send(Douyu::packMsg(Douyu::SEND_MSG_LOGIN, $roomId));
+            $cli->send(Douyu::packMsg(Douyu::SEND_MSG_JOIN_ROOM, $roomId));
+            $output->writeln(Douyu::showMsg(Douyu::MSG_LOADING));
         });
 
         // 接收数据
@@ -89,6 +76,7 @@ class DouyuCommand extends Command
             echo "Connect failed\n";
         });
         $client->on("close", function ($cli) {
+            $cli->send(Douyu::packMsg(Douyu::SEND_MSG_LOGOUT));
             echo "Connection close\n";
         });
 
@@ -96,11 +84,7 @@ class DouyuCommand extends Command
 
         //设置定时器，发送心跳
         swoole_timer_tick(45000, function () use ($client) {
-            /**
-             * @var Client $client
-             */
-            $client->send(Douyu::packMsg(Douyu::KEEP_LIVE));
-//            echo "发送心跳\n";
+            $client->send(Douyu::packMsg(Douyu::SEND_MSG_KEEP_LIVE));
         });
     }
 
@@ -115,7 +99,7 @@ class DouyuCommand extends Command
     protected function checkRoomExist($roomId)
     {
         $client = new \GuzzleHttp\Client();
-        $res    = $client->request('GET', sprintf(self::ROOM_INFO_URL, $roomId));
+        $res    = $client->request('GET', sprintf(Douyu::ROOM_INFO_URL, $roomId));
         $body   = json_decode($res->getBody(), TRUE);
         if ($body['error'] == 0) {
             $this->roomInfo = $body;

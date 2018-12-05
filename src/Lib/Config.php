@@ -1,9 +1,10 @@
 <?php
+
 namespace App\Lib;
 
 class Config
 {
-    protected $config;
+    protected        $config;
     protected static $instance;
 
     public function __construct($config)
@@ -24,6 +25,13 @@ class Config
         return self::$instance;
     }
 
+    /**
+     * 获取配置信息
+     *
+     * @param $key
+     *
+     * @return mixed
+     */
     public function get($key)
     {
         return self::$instance->config[$key];

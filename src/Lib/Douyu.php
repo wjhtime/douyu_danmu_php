@@ -1,52 +1,70 @@
 <?php
+
 namespace App\Lib;
 
 class Douyu
 {
 
-    static $url = "openbarrage.douyutv.com";
-    static $port = 8601;
+    // 斗鱼配置信息
+    const SITE_NAME = "openbarrage.douyutv.com";
+    const PORT      = 8601;
 
-    // 登录
-    const LOGIN = 'login';
-    // 保持心跳
-    const KEEP_LIVE = 'keep_live';
-    //加入房间
-    const JOIN_ROOM = 'join_room';
-    //登出
-    const LOGOUT = 'logout';
+    // 消息
+    const SEND_MSG_LOGIN     = "type@=loginreq/roomid@=:msg/\0";
+    const SEND_MSG_KEEP_LIVE = "type@=mrkl/\0";
+    const SEND_MSG_JOIN_ROOM = "type@=joingroup/rid@=:msg/gid@=-9999/\0";
+    const SEND_MSG_LOGOUT    = "type@=logout/\0";
 
-    public static $msg = [
-        self::LOGIN => "type@=loginreq/roomid@=%s/\0",
-        self::KEEP_LIVE => 'type@=mrkl/\0',
-        self::JOIN_ROOM => 'type@=joingroup/rid@=%d/gid@=-9999/\0',
-        self::LOGOUT => 'type@=logout/\0',
-    ];
+    // 展示信息
+    const MSG_ENTER                = '加入房间中...';
+    const MSG_LOADING              = '接收弹幕列表...';
+    const MSG_ERROR_ROOM_NOT_EXIST = '房间不存在';
+    const MSG_ERROR_ROOM_NOT_OPEN  = '主播未开播';
 
+    // 格式标签
+    const TAG_INFO = "<fg=green>:msg</>";
+
+    // 房间信息接口
+    const ROOM_INFO_URL = "http://open.douyucdn.cn/api/RoomApi/room/%s";
 
     public static function ip()
     {
-        return gethostbyname(self::$url);
+        return gethostbyname(self::SITE_NAME);
 
     }
 
     public static function port()
     {
-        return self::$port;
+        return self::PORT;
     }
 
     /**
      * 打包数据
+     *
      * @param $str
+     *
      * @return string
      */
-    public static function packMsg($str, ...$params){
-        $msg = vsprintf(self::$msg[$str], $params);
+    public static function packMsg($str, $params = '')
+    {
+        $msg    = str_replace(':msg', $params, $str);
         $length = pack('V', 4 + 4 + strlen($msg) + 1);
-        $code = $length;
-        $magic = chr(0xb1).chr(0x02).chr(0x00).chr(0x00);
-        $end = chr(0x00);
-        return $length.$code.$magic.$msg.$end;
+        $code   = $length;
+        $magic  = chr(0xb1) . chr(0x02) . chr(0x00) . chr(0x00);
+        $end    = chr(0x00);
+        return $length . $code . $magic . $msg . $end;
+    }
+
+    /**
+     * 展示信息
+     *
+     * @param $str
+     *
+     * @return mixed
+     */
+    public static function showMsg($str)
+    {
+        return str_replace(':msg', $str, Douyu::TAG_INFO);
     }
 
 }

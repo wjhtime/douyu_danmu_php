@@ -11,7 +11,7 @@ $application = new \Symfony\Component\Console\Application();
 
 array_map(function ($cmd) use ($application) {
     $application->add(new $cmd);
-}, $config->get('commands'));
+}, $config['commands']);
 
 $application->run();
 

@@ -2,7 +2,7 @@
 
 namespace App\Lib;
 
-class Config
+class Config implements \ArrayAccess
 {
     protected        $config;
     protected static $instance;
@@ -25,16 +25,25 @@ class Config
         return self::$instance;
     }
 
-    /**
-     * 获取配置信息
-     *
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function get($key)
+
+    public function offsetExists($offset)
     {
-        return self::$instance->config[$key];
+        return isset(self::$instance->config[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return self::$instance->config[$offset];
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        self::$instance->config[$offset] = $value;
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset(self::$instance->config[$offset]);
     }
 
 }

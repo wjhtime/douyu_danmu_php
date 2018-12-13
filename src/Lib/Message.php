@@ -154,7 +154,11 @@ class Message
                     $result['msg'][] = '原始数据: ' . $msg;
                 }
         }
-        return self::styleMessage($result);
+
+        if (SHOW_COLOR) {
+            return self::styleMessage($result);
+        }
+        return $result;
     }
 
     /**

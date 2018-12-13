@@ -50,7 +50,7 @@ class Message
     public static function handle($msg)
     {
         preg_match('/type@=(.*?)\//', $msg, $match);
-        $type = $match[1];
+        $type = $match[1] ?? '';
         if (empty($type)) return;
         $result = [];
 
@@ -170,6 +170,8 @@ class Message
      */
     public static function styleMessage($msgResult)
     {
+        if (!isset($msgResult['type'])) return $msgResult;
+
         switch ($msgResult['type']) {
 
             case self::TYPE_GIFT:

@@ -9,6 +9,7 @@
 找个人气旺的房间，一起来欣赏爆炸的弹幕吧！
 
 ## Requirements
+- php7.0
 - swoole扩展
 - symfony/console
 - guzzlehttp/guzzle

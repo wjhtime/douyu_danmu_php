@@ -13,5 +13,10 @@ array_map(function ($cmd) use ($application) {
     $application->add(new $cmd);
 }, $config['commands']);
 
-$application->run();
+try{
+    $application->run();
+}catch (Exception $exception) {
+    $log->error($exception->getMessage());
+}
+
 

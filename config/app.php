@@ -22,5 +22,9 @@ return [
         '\App\Command\DouyuCommand',
         '\App\Command\DouyuSearchCommand',
     ],
+    /**
+     * 日志文件
+     */
+    'log_file' => APP_ROOT. '/log/debug.log',
 
 ];

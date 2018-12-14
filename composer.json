@@ -10,7 +10,8 @@
         "php": ">=7.0",
         "symfony/console": "^3.4",
         "guzzlehttp/guzzle": "^6.3",
-        "jaeger/querylist": "^4.0"
+        "jaeger/querylist": "^4.0",
+        "monolog/monolog": "^1.24"
     },
     "autoload": {
         "psr-4":{

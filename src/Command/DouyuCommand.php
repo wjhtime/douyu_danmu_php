@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Lib\Config;
 use App\Lib\Douyu;
 use App\Lib\Message;
 use Swoole\Client;
@@ -64,7 +65,7 @@ class DouyuCommand extends Command
             $receiveResult        = Message::handle($data);
             $receiveResult['msg'] = $receiveResult['msg'] ?? [];
             array_walk($receiveResult['msg'], function ($msg) use ($output) {
-                if (SHOW_TIME) {
+                if (Config::get('show_time')) {
                     $date = date("Y-m-d H:i:s");
                     $msg  = $date . ' ' . $msg;
                 }

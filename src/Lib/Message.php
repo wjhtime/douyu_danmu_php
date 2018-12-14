@@ -149,13 +149,13 @@ class Message
                 break;
 
             default:
-                if (DEBUG == TRUE) {
+                if (Config::get('debug') == TRUE) {
                     $result['type']  = self::TYPE_ERROR;
                     $result['msg'][] = '原始数据: ' . $msg;
                 }
         }
 
-        if (SHOW_COLOR) {
+        if (Config::get('show_color')) {
             return self::styleMessage($result);
         }
         return $result;

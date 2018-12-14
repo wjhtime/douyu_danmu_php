@@ -17,7 +17,7 @@ class Config implements \ArrayAccess
      *
      * @return Config
      */
-    public static function instance($config)
+    public static function instance($config = [])
     {
         if (!self::$instance) {
             self::$instance = new self($config);
@@ -44,6 +44,16 @@ class Config implements \ArrayAccess
     public function offsetUnset($offset)
     {
         unset(self::$instance->config[$offset]);
+    }
+
+    public static function get($key)
+    {
+        return self::$instance->config[$key];
+    }
+
+    public function __get($key)
+    {
+        return self::$instance->config[$key];
     }
 
 }

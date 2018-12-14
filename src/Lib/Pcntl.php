@@ -37,7 +37,7 @@ class Pcntl
                 //解析，输出内容
                 $receiveResult = Message::handle($content);
                 array_walk($receiveResult, function ($msg) {
-                    if (SHOW_TIME) {
+                    if (Config::get('show_time')) {
                         $date = date("Y-m-d H:i:s");
                         $msg = $date. ' ' . $msg;
                     }
@@ -55,7 +55,7 @@ class Pcntl
                 if (time() - $time > 40) {
                     $sock->sendMsg(Douyu::SEND_MSG_KEEP_LIVE);
                     $time = time();
-                    if (DEBUG === true) {
+                    if (Config::get('debug') === true) {
                         echo date("Y-m-d H:i:s"). " 发送心跳包 \n";
                     }
 

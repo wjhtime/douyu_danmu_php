@@ -7,7 +7,7 @@ if (!defined('APP_ROOT')) {
 }
 
 require APP_ROOT . '/vendor/autoload.php';
-require APP_ROOT . '/src/init.php';
+$container = require APP_ROOT . '/src/init.php';
 
 $application = new Application();
 

@@ -18,7 +18,7 @@ $container['config'] = function (Container $container) use ($app) {
 $container['log'] = function (Container $c) {
     $log = new Logger('douyu');
     $log->pushHandler(new StreamHandler($c['config']['log_file']));
+    return $log;
 };
 
-
-
+return $container;

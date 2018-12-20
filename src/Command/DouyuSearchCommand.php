@@ -54,9 +54,9 @@ class DouyuSearchCommand extends Command
         $ql = QueryList::get(sprintf(Douyu::ROOM_SEARCH_URL, rawurlencode($keywords)));
         $ids = $ql->find('.play-list a')->attrs('data-rid')->toArray();
         $titles = $ql->find('.play-list li a .mes .mes-tit h3')->texts('title')->toArray();
-	$names = $ql->find('.play-list li a .mes p .dy-name')->texts('name')->toArray();
+        $names = $ql->find('.play-list li a .mes p .dy-name')->texts('name')->toArray();
 
-	return array_map(null, $ids, $titles, $names);
+        return array_map(null, $ids, $titles, $names);
     }
 
 

@@ -38,7 +38,7 @@ class DouyuSearchCommand extends Command
         $res = $this->searchRooms($keywords);
 
         $table = new Table($output);
-        $table->setHeaders(['房间号', '房间名称'])
+        $table->setHeaders(['房间号', '房间名称', '主播名称'])
               ->addRows($res)
               ->render();
     }
@@ -54,8 +54,9 @@ class DouyuSearchCommand extends Command
         $ql = QueryList::get(sprintf(Douyu::ROOM_SEARCH_URL, rawurlencode($keywords)));
         $ids = $ql->find('.play-list a')->attrs('data-rid')->toArray();
         $titles = $ql->find('.play-list li a .mes .mes-tit h3')->texts('title')->toArray();
+	$names = $ql->find('.play-list li a .mes p .dy-name')->texts('name')->toArray();
 
-        return array_map(null, $ids, $titles);
+	return array_map(null, $ids, $titles, $names);
     }
 
 

@@ -14,7 +14,6 @@ class Config implements \ArrayAccess
 
     /**
      * @param $config
-     *
      * @return Config
      */
     public static function instance($config = [])

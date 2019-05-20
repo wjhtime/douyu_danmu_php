@@ -7,7 +7,7 @@ class Config implements \ArrayAccess
     protected        $config;
     protected static $instance;
 
-    public function __construct($config)
+    private function __construct($config)
     {
         $this->config = $config;
     }
